@@ -1,0 +1,36 @@
+{
+  "$schema" : "https:\/\/schema.linearmouse.app\/0.10.2",
+  "schemes" : [
+    {
+      "buttons" : {
+        "mappings" : [
+          {
+            "action" : "media.volumeDown",
+            "command" : false,
+            "control" : false,
+            "option" : false,
+            "scroll" : "left",
+            "shift" : false
+          },
+          {
+            "action" : "media.volumeUp",
+            "command" : false,
+            "control" : false,
+            "option" : false,
+            "scroll" : "right",
+            "shift" : false
+          }
+        ]
+      },
+      "if" : {
+        "device" : {
+          "category" : "mouse",
+          "productID" : "0xb034",
+          "productName" : "MX Master 3S",
+          "serialNumber" : "67AE39A4",
+          "vendorID" : "0x46d"
+        }
+      }
+    }
+  ]
+}
