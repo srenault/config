@@ -85,3 +85,6 @@
   (add-hook 'projectile-after-switch-project-hook #'treemacs))
 
 (global-auto-revert-mode 1)
+
+(setq select-enable-clipboard t)
+(setq select-enable-primary t) ; for X11 primary selection
