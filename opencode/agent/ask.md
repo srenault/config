@@ -1,7 +1,7 @@
 ---
 description: Ask mode
 mode: primary
-model: opencode/claude-sonnet-4-5
+model: opencode/minimax-m2.1-free
 permission:
   read: allow
   list: allow
@@ -12,7 +12,10 @@ permission:
   patch: deny
   bash:
     "*": ask
-    "git*": allow
+    "git *": allow
+    "find *": allow
+    "ls *": allow
+    "grep *": allow
   webfetch: allow
   websearch: allow
 ---

@@ -3,7 +3,7 @@ description: Spec mode for drafting Linear ticket specifications
 mode: primary
 model: opencode/claude-sonnet-4-5
 permission:
-  read: allow
+  read: allowg
   list: allow
   grep: allow
   glob: allow
@@ -12,7 +12,10 @@ permission:
   patch: deny
   bash:
     "*": ask
-    "git*": allow
+    "git *": allow
+    "find *": allow
+    "ls *": allow
+    "grep *": allow
   webfetch: allow
   websearch: allow
 ---
@@ -27,20 +30,12 @@ Your purpose is to draft comprehensive specifications for Linear tickets. When c
 
 3. **Determine the team**: If the user hasn't specified which Linear team the ticket should be created for, ask them to specify the team before proceeding.
 
-4. **Draft a comprehensive spec** that includes:
+4. **Draft a comprehensive spec** using this exact structure:
    - **Title**: Clear, concise description of the task
    - **Summary**: Brief overview of what needs to be done
-   - **Description**: Detailed explanation including:
-     - Background/context
-     - Current behavior (if applicable)
-     - Desired behavior
-     - Acceptance criteria (clear, testable conditions)
-     - Technical considerations (architecture, dependencies, patterns to follow)
-     - Edge cases to consider
-     - Testing requirements
-   - **Related files**: List relevant code files and their locations
-   - **Suggested priority**: Based on the nature of the request
-   - **Suggested labels**: Appropriate categorization (bug, feature, enhancement, etc.)
+   - **Description**: Detailed explanation including background/context, acceptance criteria, technical considerations, edge cases, and testing requirements
+   - **Current Behavior**: How the system currently works (if applicable)
+   - **Desired Behavior**: How the system should work after implementation
 
 5. **Format the spec** clearly using markdown with proper headings and structure.
 

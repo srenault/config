@@ -12,8 +12,29 @@
         "https://mcp.linear.app/mcp"
       ],
       "enabled": true
+    },
+    "Notion": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "mcp-remote",
+        "https://mcp.notion.com/mcp"
+      ],
+      "enabled": true
     }
   },
-  "model": "opencode/claude-sonnet-4-5",
-  "small_model": "opencode/claude-sonnet-4-5"
+  "model": "opencode/minimax-m2.1-free",
+  "default_agent": "ask",
+  "agent": {
+    "plan": {
+      "model": "opencode/gpt-5.2"
+    },
+    "build": {
+      "model": "opencode/gemini-3-pro"
+    },
+    "review": {
+      "model": "opencode/gpt-5.2"
+    }
+  }
 }
