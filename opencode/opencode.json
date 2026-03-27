@@ -1,0 +1,72 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "~/.config/opencode/instructions/no-inline-imports.md",
+    "~/.config/opencode/instructions/typescript-exhaustive-switch.md"
+  ],
+  "mcp": {
+    "pencil": {
+      "command": [
+        "/Applications/Pencil.app/Contents/Resources/app.asar.unpacked/out/mcp-server-darwin-arm64",
+        "--app",
+        "desktop"
+      ],
+      "enabled": true,
+      "type": "local"
+    }
+  },
+  "command": {
+    "pr-review": {
+      "template": "Review this PR using the pr-review-canvas skill. $ARGUMENTS",
+      "description": "Generate an interactive PR review walkthrough as an HTML page"
+    },
+    "weekly-review": {
+      "template": "Generate a weekly review using the weekly-review skill. $ARGUMENTS",
+      "description": "Weekly synthesis of recent commits — bugfixes, tech debt, and net-new work"
+    },
+    "done": {
+      "template": "Summarize what I got done using the what-did-i-get-done skill. $ARGUMENTS",
+      "description": "Summarize authored commits over a time period into a concise update"
+    },
+    "new-pr": {
+      "template": "Create a new branch and open a PR using the new-branch-and-pr skill. $ARGUMENTS",
+      "description": "Create a fresh branch, complete work, and open a pull request"
+    },
+    "smoke-test": {
+      "template": "Run smoke tests using the run-smoke-tests skill. $ARGUMENTS",
+      "description": "Run Playwright smoke tests, debug failures, and verify fixes"
+    },
+    "ship": {
+      "template": "Review and ship changes using the review-and-ship skill. $ARGUMENTS",
+      "description": "Run a structured review, close key issues, and ship changes via PR"
+    },
+    "loop-ci": {
+      "template": "Watch CI and iterate on failures using the loop-on-ci skill. $ARGUMENTS",
+      "description": "Watch CI runs and iterate on failures until all checks pass"
+    },
+    "pr-comments": {
+      "template": "Fetch and summarize PR review comments using the get-pr-comments skill. $ARGUMENTS",
+      "description": "Fetch and summarize review comments from the active pull request"
+    },
+    "fix-conflicts": {
+      "template": "Resolve merge conflicts using the fix-merge-conflicts skill. $ARGUMENTS",
+      "description": "Resolve merge conflicts, validate build/tests, and finalize resolution"
+    },
+    "fix-ci": {
+      "template": "Find and fix failing CI jobs using the fix-ci skill. $ARGUMENTS",
+      "description": "Find failing CI jobs, inspect logs, and apply focused fixes"
+    },
+    "deslop": {
+      "template": "Clean up AI-generated code slop using the deslop skill. $ARGUMENTS",
+      "description": "Remove AI-generated code slop and clean up code style"
+    },
+    "check-types": {
+      "template": "Run compile and type-check commands using the check-compiler-errors skill. $ARGUMENTS",
+      "description": "Run compile and type-check commands and report failures"
+    },
+    "commit": {
+      "template": "Create a git commit using the git-commit skill. $ARGUMENTS",
+      "description": "Create a standardized Conventional Commits git commit with diff analysis"
+    }
+  }
+}
