@@ -37,7 +37,19 @@ Gather from the user:
 
 The standard pair is `instructions` + `output`. Add others only if the evaluator needs them.
 
-## Step 2: Push a StructuredPrompt to the LangSmith hub
+## Step 2: Choose the judge model
+
+Before building the prompt, determine the best OpenAI model for this evaluator.
+
+1. **Fetch the latest models** -- Use the WebFetch tool to load `https://platform.openai.com/docs/models` and identify the current frontier model lineup (names, pricing, context windows, reasoning support).
+2. **Assess eval complexity** -- Consider the criteria gathered in Step 1:
+   - **Simple** (single criterion, pattern-matching, short inputs): pick the **nano**-tier model (cheapest, fastest).
+   - **Moderate** (2-3 criteria, moderate input length, some judgment): pick the **mini**-tier model (good balance of accuracy and cost).
+   - **Complex** (multi-dimensional criteria, long inputs, nuanced subjective judgment, tone/style assessment): pick the **full flagship** model (highest accuracy).
+3. **Present the recommendation** to the user with a brief justification, and confirm before proceeding. Include the model ID, pricing, and why it fits the eval's complexity.
+4. **Use the chosen model** in all subsequent steps (prompt push, evaluator rule, creation script). Do NOT hardcode a model -- always use the one selected in this step.
+
+## Step 3: Push a StructuredPrompt to the LangSmith hub
 
 Use the Python SDK. The TypeScript SDK fails with StructuredPrompt ("Manifest must have an id field").
 
@@ -58,12 +70,16 @@ schema = {
     'type': 'object',
     'strict': True,
     'properties': {
+        'reasoning': {
+            'type': 'string',
+            'description': 'Step-by-step reasoning justifying the verdict before deciding true or false.'
+        },
         '<feedback_key>': {
             'type': 'boolean',
             'description': '<what true/false means>'
         }
     },
-    'required': ['<feedback_key>']
+    'required': ['reasoning', '<feedback_key>']
 }
 
 prompt = StructuredPrompt.from_messages_and_schema(
@@ -86,7 +102,7 @@ prompt = StructuredPrompt.from_messages_and_schema(
     schema=schema,
 )
 
-model = ChatOpenAI(model='gpt-4.1-mini', temperature=0)
+model = ChatOpenAI(model='<chosen_model>', temperature=0)
 chain = prompt | model
 
 url = client.push_prompt('<prompt_name>', object=chain, is_public=False)
@@ -95,13 +111,15 @@ print(f'Prompt pushed: {url}')
 ```
 
 Key details:
+- Always include a `reasoning` string field in the schema **before** the feedback key. This enables the evaluator to explain its verdict. The `reasoning` field must be listed first in both `properties` and `required` so the model generates its justification before the boolean verdict.
+- In the evaluator rule (Step 4), set `"include_reasoning": true` in the `structured` config to surface the reasoning in the LangSmith UI.
 - Add few-shot examples to the human message between the criteria reference and the actual input. Use 1-3 short, representative snippets from the dataset showing clear pass/fail verdicts with a one-line explanation. Pull candidates with `python3 -c "..."` from `/tmp/content-writer-agent-dataset.json` (export with `langsmith dataset read "content-writer-agent" > /tmp/content-writer-agent-dataset.json` if needed).
 - Push as `prompt | model` chain -- required for rule API validation to pass.
 - `OPENAI_API_KEY=placeholder` is fine; the real key is injected by LangSmith at runtime.
 - Template uses f-string format with single curly braces (`{var}`). Do NOT use double curly braces (`{{var}}`) -- those are treated as escaped literals.
 - Verify the push succeeds before proceeding.
 
-## Step 3: Create the evaluator rule via the API
+## Step 4: Create the evaluator rule via the API
 
 ```bash
 curl -s -X POST "https://api.smith.langchain.com/api/v1/runs/rules" \
@@ -120,12 +138,13 @@ curl -s -X POST "https://api.smith.langchain.com/api/v1/runs/rules" \
             "instructions": "input.messages",
             "output": "output.xmlDiffTextContent"
           },
+          "include_reasoning": true,
           "model": {
             "lc": 1,
             "type": "constructor",
             "id": ["langchain", "chat_models", "openai", "ChatOpenAI"],
             "kwargs": {
-              "model": "gpt-4.1-mini",
+              "model": "<chosen_model>",
               "temperature": 0,
               "openai_api_key": {
                 "lc": 1,
@@ -144,11 +163,12 @@ The `model` block is required for validation even though the response returns `m
 
 Verify with: `langsmith evaluator list --format json | python3 -c "import json,sys; [print(e['name']) for e in json.load(sys.stdin) if e.get('dataset_id')=='c784905c-2974-4e56-811b-d871039b65ee']"`
 
-## Step 4: Save the creation script
+## Step 5: Save the creation script
 
 Create an idempotent TypeScript script next to this skill, at `create<EvalName>Eval.ts` (in this skill directory), following the pattern in `createFormattingRichTextQualityEval.ts`. The script should:
 
 - Check if the evaluator already exists before creating.
+- Include the `reasoning` string field in the prompt schema (before the feedback key) and set `"include_reasoning": true` in the evaluator rule.
 - Use `fetch` against the LangSmith API (no SDK needed for the rule).
 - Be runnable with `npx tsx <script>`.
 
