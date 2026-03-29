@@ -3,7 +3,7 @@ description: Spec mode for drafting Linear ticket specifications
 mode: primary
 model: opencode/claude-sonnet-4-5
 permission:
-  read: allowg
+  read: allow
   list: allow
   grep: allow
   glob: allow
