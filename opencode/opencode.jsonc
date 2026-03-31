@@ -1,19 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": true,
-  "model": "us.anthropic.claude-opus-4-6-v1",
+  "model": "opencode/gpt-5.4",
   "default_agent": "ask",
-  "agent": {
-    "plan": {
-      "model": "us.anthropic.claude-opus-4-6-v1"
-    },
-    "build": {
-      "model": "us.anthropic.claude-opus-4-6-v1"
-    },
-    "review": {
-      "model": "us.anthropic.claude-opus-4-6-v1"
-    }
-  },
   "instructions": [
     "~/.config/opencode/instructions/no-inline-imports.md",
     "~/.config/opencode/instructions/typescript-exhaustive-switch.md"
@@ -29,15 +18,14 @@
       ],
       "enabled": true
     },
-    "Notion": {
+    "Unblocked": {
       "type": "local",
       "command": [
-        "npx",
-        "-y",
-        "mcp-remote",
-        "https://mcp.notion.com/mcp"
-      ],
-      "enabled": true
+        "/Users/sre/.unblocked/agent/node/bin/node",
+        "/Applications/Unblocked.app/Contents/Resources/cli/server.js",
+        "--client",
+        "mcpClaudeCode"
+      ]
     },
     "context7": {
       "type": "remote",
@@ -96,6 +84,11 @@
     "commit": {
       "template": "Create a git commit using the git-commit skill. $ARGUMENTS",
       "description": "Create a standardized Conventional Commits git commit with diff analysis"
+    },
+    "ci-watcher": {
+      "template": "Watch GitHub CI for the current branch and report pass/fail with relevant failure logs. $ARGUMENTS",
+      "description": "Watch CI status for the current branch and report results",
+      "subtask": true
     }
   }
 }
